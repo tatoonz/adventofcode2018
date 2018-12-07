@@ -1,4 +1,5 @@
-// Package day2 part 1
+package day2
+
 // --- Day 2: Inventory Management System ---
 // You stop falling through time, catch your breath, and check the screen on the device. "Destination reached. Current Year: 1518. Current Location: North Pole Utility Closet 83N10." You made it! Now, to find those anomalies.
 //
@@ -22,7 +23,6 @@
 // Of these box IDs, four of them contain a letter which appears exactly twice, and three of them contain a letter which appears exactly three times. Multiplying these together produces a checksum of 4 * 3 = 12.
 //
 // What is the checksum for your list of box IDs?
-package day2
 
 func part1(input []string) int {
 	twice := 0

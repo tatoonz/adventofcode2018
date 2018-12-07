@@ -1,4 +1,5 @@
-// Package day1 part 2
+package day1
+
 // You notice that the device repeats the same frequency change list over and over. To calibrate the device, you need to find the first frequency it reaches twice.
 //
 // For example, using the same list of changes above, the device would loop as follows:
@@ -19,7 +20,6 @@
 // -6, +3, +8, +5, -6 first reaches 5 twice.
 // +7, +7, -2, -7, -4 first reaches 14 twice.
 // What is the first frequency your device reaches twice?
-package day1
 
 func part2(n []int) int {
 	lastResult := 0

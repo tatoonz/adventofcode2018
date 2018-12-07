@@ -69,13 +69,35 @@ type guardMeta struct {
 }
 
 func part1(input []string) int {
+	guardMetas := generateGuardMetas(input)
+
+	choosenGuardID := 0
+	longestAsleep := 0
+
+	for guardID, gm := range guardMetas {
+		if gm.totalSleep > longestAsleep {
+			choosenGuardID = guardID
+			longestAsleep = gm.totalSleep
+		}
+	}
+
+	choosenGuardMeta := guardMetas[choosenGuardID]
+	chooseMinute := 0
+	mostAsleepMinute := 0
+	for minute, count := range choosenGuardMeta.sleepMinutesCount {
+		if count > mostAsleepMinute {
+			mostAsleepMinute = count
+			chooseMinute = minute
+		}
+	}
+
+	return choosenGuardID * chooseMinute
+}
+
+func generateGuardMetas(input []string) map[int]guardMeta {
 	cInput := make([]string, len(input))
 	copy(cInput, input)
 	sort.Strings(cInput)
-
-	// for _, i := range cInput {
-	// 	fmt.Println(i)
-	// }
 
 	var err error
 
@@ -131,25 +153,5 @@ func part1(input []string) int {
 		}
 	}
 
-	choosenGuardID := 0
-	longestAsleep := 0
-
-	for guardID, gm := range guardMetas {
-		if gm.totalSleep > longestAsleep {
-			choosenGuardID = guardID
-			longestAsleep = gm.totalSleep
-		}
-	}
-
-	choosenGuardMeta := guardMetas[choosenGuardID]
-	chooseMinute := 0
-	mostAsleepMinute := 0
-	for minute, count := range choosenGuardMeta.sleepMinutesCount {
-		if count > mostAsleepMinute {
-			mostAsleepMinute = count
-			chooseMinute = minute
-		}
-	}
-
-	return choosenGuardID * chooseMinute
+	return guardMetas
 }

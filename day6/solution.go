@@ -56,6 +56,11 @@ import (
 //
 // What is the size of the largest area that isn't infinite?
 
+type deviceInput struct {
+	totalDist int
+	coords    []string
+}
+
 type coordinate struct {
 	x int
 	y int
@@ -89,16 +94,21 @@ func (c1 coordinate) manhattanDistance(c2 coordinate) int {
 	return int(r)
 }
 
-func part1(ss []string) (int, error) {
+type destination struct {
+	largestArea int
+	regionSize  int
+}
+
+func solution(i deviceInput) (destination, error) {
 	cc := coordinates{}
 
 	maxX := 0
 	maxY := 0
 
-	for _, s := range ss {
+	for _, s := range i.coords {
 		c, err := newCoordiate(s)
 		if err != nil {
-			return 0, err
+			return destination{}, err
 		}
 
 		maxX = int(math.Max(float64(maxX), float64(c.x)))
@@ -107,25 +117,22 @@ func part1(ss []string) (int, error) {
 		cc = append(cc, c)
 	}
 
-	fmt.Println("max X:", maxX)
-	fmt.Println("max Y:", maxY)
-	fmt.Println()
-
 	infiniteCoord := map[coordinate]bool{}
 	coordClosestCount := map[coordinate]int{}
 
+	regionCount := 0
 	for y := 0; y <= maxY; y++ {
 		for x := 0; x <= maxX; x++ {
-			// fmt.Printf("C(%v, %v):\n", x, y)
-
 			curC, err := newCoordiate(fmt.Sprintf("%v, %v", x, y))
 			if err != nil {
-				return 0, err
+				return destination{}, err
 			}
 
 			closestDist := math.MaxInt64
 			closestCoord := coordinate{}
 			closestCount := map[int]int{}
+
+			totalDist := 0
 
 			for _, c := range cc {
 				d := curC.manhattanDistance(c)
@@ -138,6 +145,8 @@ func part1(ss []string) (int, error) {
 					closestDist = d
 					closestCoord = c
 				}
+
+				totalDist += d
 			}
 
 			isOnlyClosestCoord := closestCount[closestDist] == 1
@@ -148,6 +157,10 @@ func part1(ss []string) (int, error) {
 				if isOnInfiniteEdge {
 					infiniteCoord[closestCoord] = true
 				}
+			}
+
+			if totalDist < i.totalDist {
+				regionCount++
 			}
 		}
 	}
@@ -163,5 +176,10 @@ func part1(ss []string) (int, error) {
 		}
 	}
 
-	return maxClosestCount, nil
+	dest := destination{
+		largestArea: maxClosestCount,
+		regionSize:  regionCount,
+	}
+
+	return dest, nil
 }
